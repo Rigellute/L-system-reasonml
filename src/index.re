@@ -5,17 +5,19 @@ open Reprocessing;
  * variables : F
  * constants : + − [ ]
  * start  : X
- * rule(s)  : F+[[F]-F]-F[-FF]+F
+ * rule(s)  :  (X → F+[[X]-X]-F[-FX]+X), (F → FF)
  * angle  : 25°
  * "F" means "draw forward" "−" means "turn left by angle (25°)", and + means "turn right 25°".
  * The square bracket "[" corresponds to saving the current values for position and angle, which are restored when the corresponding "]" is executed.
  */
 let _DIMENSION = 600;
 let c = 4.0;
-let rule = "F+[[F]-F]-F[-FF]+F";
-let axiom = "F";
+let xRule = "F+[[X]-X]-F[-FX]+X";
+let fRule = "FF";
+let axiom = "X";
 let angle = Utils.radians(25.);
 let initBranchLength = 300.0;
+let minBranchLength = 5.0;
 
 type state = {
     branchLength: float,
@@ -59,7 +61,8 @@ let generate = (state: state, strList: list(string)) => {
     let newSentence = List.fold_left((str, char) => {
         let sentence = switch char {
             | "" => ""
-            | "F" => str ++ rule
+            | "X" => str ++ xRule
+            | "F" => str ++ fRule
             | _ => char ++ state.sentence
         };
 
@@ -96,7 +99,7 @@ let turtle = (state: state, env) => {
 };
 
 let draw = (state: state, env) => {
-    let sentence = if (state.branchLength > 1.0) {
+    let sentence = if (state.branchLength > minBranchLength) {
         let s = generate(state, Str.split(Str.regexp({|,|}), state.sentence));
         turtle(state, env);
         print_endline(s);
