@@ -10,7 +10,7 @@ open Reprocessing;
  * "F" means "draw forward" "−" means "turn left by angle (25°)", and + means "turn right 25°".
  * The square bracket "[" corresponds to saving the current values for position and angle, which are restored when the corresponding "]" is executed.
  */
-let _DIMENSION = 600;
+let windowDimension = 600;
 let xRule = "F+[[X]-X]-F[-FX]+X";
 let fRule = "FF";
 let axiom = "X";
@@ -44,7 +44,7 @@ let drawBranch = (state: state, env: envType) => {
 
 
 let setup = (env) => {
-    Env.size(~width=_DIMENSION, ~height=_DIMENSION, env);
+    Env.size(~width=windowDimension, ~height=windowDimension, env);
 
     Draw.background(Utils.color(~r=51, ~g=51, ~b=51, ~a=255), env);
 
@@ -72,7 +72,7 @@ let generate = (strList: list(string)) => {
 };
 
 let turtle = (state: state, env) => {
-    Draw.translate(~x=float_of_int(_DIMENSION) /. 2.0, ~y=float_of_int(_DIMENSION), env);
+    Draw.translate(~x=float_of_int(windowDimension) /. 2.0, ~y=float_of_int(windowDimension), env);
     Draw.stroke(Utils.color(~r=113, ~g=247, ~b=159, ~a=190), env);
 
     let sentence = Str.split(Str.regexp({||}), state.sentence);
