@@ -2,7 +2,7 @@ open Reprocessing;
 
 /**
  * L-system details -
- * variables : F
+ * variables : X F
  * constants : + − [ ]
  * start  : X
  * rule(s)  :  (X → F+[[X]-X]-F[-FX]+X), (F → FF)
