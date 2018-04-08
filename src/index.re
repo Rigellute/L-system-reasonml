@@ -11,13 +11,12 @@ open Reprocessing;
  * The square bracket "[" corresponds to saving the current values for position and angle, which are restored when the corresponding "]" is executed.
  */
 let _DIMENSION = 600;
-let c = 4.0;
 let xRule = "F+[[X]-X]-F[-FX]+X";
 let fRule = "FF";
 let axiom = "X";
 let angle = Utils.radians(25.);
 let initBranchLength = 300.0;
-let minBranchLength = 5.0;
+let minBranchLength = 3.0;
 
 type state = {
     branchLength: float,
@@ -57,13 +56,13 @@ let setup = (env) => {
     initState
 };
 
-let generate = (state: state, strList: list(string)) => {
+let generate = (strList: list(string)) => {
     let newSentence = List.fold_left((str, char) => {
         let sentence = switch char {
             | "" => ""
             | "X" => str ++ xRule
             | "F" => str ++ fRule
-            | _ => char ++ state.sentence
+            | _ => str ++ char
         };
 
         sentence
@@ -74,7 +73,7 @@ let generate = (state: state, strList: list(string)) => {
 
 let turtle = (state: state, env) => {
     Draw.translate(~x=float_of_int(_DIMENSION) /. 2.0, ~y=float_of_int(_DIMENSION), env);
-    Draw.stroke(Utils.color(~r=255, ~g=255, ~b=255, ~a=51), env);
+    Draw.stroke(Utils.color(~r=113, ~g=247, ~b=159, ~a=190), env);
 
     let sentence = Str.split(Str.regexp({||}), state.sentence);
 
@@ -99,10 +98,11 @@ let turtle = (state: state, env) => {
 };
 
 let draw = (state: state, env) => {
+    turnRight(env);
+    Draw.strokeWeight(1, env);
     let sentence = if (state.branchLength > minBranchLength) {
-        let s = generate(state, Str.split(Str.regexp({|,|}), state.sentence));
+        let s = generate(Str.split(Str.regexp({||}), state.sentence));
         turtle(state, env);
-        print_endline(s);
         s
     } else {
         state.sentence
