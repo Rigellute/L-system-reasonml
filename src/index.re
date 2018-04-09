@@ -15,7 +15,7 @@ let xRule = "F+[[X]-X]-F[-FX]+X";
 let fRule = "FF";
 let axiom = 'X';
 let angle = Utils.radians(25.);
-let initBranchLength = 300.0;
+let initBranchLength = 100.0;
 let minBranchLength = 3.0;
 let maxIterations = 3;
 
@@ -51,7 +51,6 @@ let turnLeft = (env: envType) => {
     Draw.rotate(-. angle, env);
 };
 let drawBranch = (branchLength: float, env: envType) => {
-    print_endline(string_of_float(branchLength));
     Draw.line(~p1=(0, 0), ~p2=(0, int_of_float(-. branchLength)), env);
     Draw.translate(~x=0.0, ~y= -. branchLength, env);
 };
@@ -97,7 +96,12 @@ let turtle = (initBranchLength: float, sentence: string, env: envType) => {
                 | _ => ()
             };
 
-            turtleRun(tail, branchLength *. 0.5);
+            let newBranchLength = switch head {
+                | "F" =>  branchLength *. 0.5
+                | _ => branchLength
+            };
+
+            turtleRun(tail, newBranchLength);
         };
     };
 
@@ -114,13 +118,14 @@ let setup = (env) => {
     Draw.strokeWeight(1, env);
     let sentence = generate([axiom], 0);
 
+    print_endline(sentence);
+
     let initState = {
         sentence: split([], sentence),
         iterationCount: 0,
         branchLength: initBranchLength,
     };
 
-    initState
-};
+    turtle(initBranchLength, sentence, env);
 
 run(~setup, ());
