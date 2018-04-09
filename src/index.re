@@ -16,7 +16,7 @@ let fRule = "FF";
 let axiom = "X";
 let angle = Utils.radians(25.);
 let initBranchLength = 300.0;
-let minBranchLength = 3.0;
+let minBranchLength = 5.0;
 
 type state = {
     branchLength: float,
@@ -56,37 +56,46 @@ let setup = (env) => {
     initState
 };
 
-let generate = (strList: list(string)) => {
-    let newSentence = List.fold_left((str, char) => {
+let generate = (strList: list(char)) => {
+    let newSentence = List.fold_left((str, char: char) => {
         let sentence = switch char {
-            | "" => ""
-            | "X" => str ++ xRule
-            | "F" => str ++ fRule
-            | _ => str ++ char
+            | 'X' => str ++ xRule
+            | 'F' => str ++ fRule
+            | _ => str ++ String.make(1, char)
         };
-
         sentence
     }, "", strList);
 
     newSentence
 };
 
+let rec split = (acc: list(char), str: string) => {
+  	let len = String.length(str);
+	let stringList = if (len > 0) {
+  		split(acc @ [str.[0]], String.sub(str, 1, len - 1))
+  	} else {
+      acc
+  };
+
+  stringList
+};
+
 let turtle = (state: state, env) => {
     Draw.translate(~x=float_of_int(windowDimension) /. 2.0, ~y=float_of_int(windowDimension), env);
     Draw.stroke(Utils.color(~r=113, ~g=247, ~b=159, ~a=190), env);
 
-    let sentence = Str.split(Str.regexp({||}), state.sentence);
+    let sentence = split([], state.sentence);
 
-    let rec turtleRun = (lst: list(string)) => {
+    let rec turtleRun = (lst: list(char)) => {
         let [head, ...tail] = lst;
 
         let _ = if (List.length(tail) > 0) {
             switch head {
-                | "F" => drawBranch(state, env)
-                | "+" => turnRight(env)
-                | "-" => turnLeft(env)
-                | "[" => save(env)
-                | "]" => revert(env)
+                | 'F' => drawBranch(state, env)
+                | '+' => turnRight(env)
+                | '-' => turnLeft(env)
+                | '[' => save(env)
+                | ']' => revert(env)
                 | _ => ()
             };
 
@@ -101,7 +110,7 @@ let draw = (state: state, env) => {
     turnRight(env);
     Draw.strokeWeight(1, env);
     let sentence = if (state.branchLength > minBranchLength) {
-        let s = generate(Str.split(Str.regexp({||}), state.sentence));
+        let s = generate(split([], state.sentence));
         turtle(state, env);
         s
     } else {
