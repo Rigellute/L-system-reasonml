@@ -11,7 +11,7 @@ open Reprocessing;
  * The square bracket "[" corresponds to saving the current values for position and angle, which are restored when the corresponding "]" is executed.
  */
 let windowDimension = 600;
-let xRule = "FF";
+let xRule = "F+[[X]-X]-F[-FX]+X";
 let fRule = "FF";
 let axiom = 'X';
 let angle = Utils.radians(25.);
