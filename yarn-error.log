@@ -1,5 +1,5 @@
 Arguments: 
-  /Users/alexander.keliris/.nvm/versions/node/v9.4.0/bin/node /usr/local/Cellar/yarn/1.5.1/libexec/bin/yarn.js build
+  /Users/alexander.keliris/.nvm/versions/node/v9.4.0/bin/node /usr/local/Cellar/yarn/1.5.1/libexec/bin/yarn.js start
 
 PATH: 
   /Users/alexander.keliris/.nvm/versions/node/v9.4.0/bin:/usr/local/bin:/Users/alexander.keliris/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/alexander.keliris/Library/Android/sdk/tools:/Users/alexander.keliris/Library/Android/sdk/platform-tools
@@ -103,9 +103,9 @@ Lockfile:
 
 Trace: 
   Error: Command failed.
-  Exit code: 2
+  Exit signal: SIGSEGV
   Command: sh
-  Arguments: -c bsb -make-world
+  Arguments: -c ./lib/bs/bytecode/indexhot.byte
   Directory: /Users/alexander.keliris/Dev/reprocessing-L-system
   Output:
   
